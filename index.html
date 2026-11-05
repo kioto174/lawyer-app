@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0b0d11">
   <title>Госпошлина и подсудность — Челябинск</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://googleapis.com">
+  <link rel="preconnect" href="https://gstatic.com" crossorigin>
+  <link href="https://googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #0b0d11;
@@ -26,7 +26,6 @@
       --radius: 20px;
       --tap: 56px;
     }
-
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; }
     body {
@@ -35,904 +34,156 @@
       font-family: Manrope, "Segoe UI", sans-serif;
       font-size: 17px;
       line-height: 1.45;
-      background:
-        radial-gradient(900px 420px at 50% -8%, rgba(212, 184, 138, 0.14), transparent 60%),
-        var(--bg);
+      background: radial-gradient(900px 420px at 50% -8%, rgba(212, 184, 138, 0.14), transparent 60%), var(--bg);
     }
-
-    button, input { font: inherit; color: inherit; }
+    button, input, select { font: inherit; color: inherit; }
     button { cursor: pointer; }
-    :focus-visible {
-      outline: 2px solid var(--gold-2);
-      outline-offset: 3px;
-    }
-
-    .wrap {
-      width: min(760px, 100%);
-      margin: 0 auto;
-      padding: 28px 18px 48px;
-    }
-
-    .brand {
-      display: flex;
-      gap: 14px;
-      align-items: center;
-      margin-bottom: 22px;
-    }
-    .seal {
-      width: 52px;
-      height: 52px;
-      flex: 0 0 52px;
-      border: 1px solid var(--gold);
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      color: var(--gold-2);
-      font-family: "Cormorant Garamond", Georgia, serif;
-      font-size: 28px;
-      background: rgba(212, 184, 138, 0.06);
-    }
-    .brand h1 {
-      margin: 0;
-      font-family: "Cormorant Garamond", Georgia, serif;
-      font-size: 34px;
-      font-weight: 600;
-      letter-spacing: 0.01em;
-      line-height: 1;
-    }
-    .brand p {
-      margin: 6px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .tabs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      padding: 6px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      margin-bottom: 18px;
-    }
-    .tab {
-      min-height: var(--tap);
-      border: 0;
-      border-radius: 14px;
-      background: transparent;
-      color: var(--muted);
-      font-weight: 600;
-      letter-spacing: 0.01em;
-      transition: background 0.25s ease, color 0.25s ease;
-    }
-    .tab[aria-selected="true"] {
-      background: linear-gradient(180deg, #2a241c, #1a1713);
-      color: var(--gold-2);
-      box-shadow: inset 0 0 0 1px rgba(212, 184, 138, 0.45);
-    }
-
+    .wrap { width: min(760px, 100%); margin: 0 auto; padding: 28px 18px 48px; }
+    .brand { display: flex; gap: 14px; align-items: center; margin-bottom: 22px; }
+    .seal { width: 52px; height: 52px; flex: 0 0 52px; border: 1px solid var(--gold); border-radius: 50%; display: grid; place-items: center; color: var(--gold-2); font-family: "Cormorant Garamond", Georgia, serif; font-size: 28px; background: rgba(212, 184, 138, 0.06); }
+    .brand h1 { margin: 0; font-family: "Cormorant Garamond", Georgia, serif; font-size: 34px; font-weight: 600; line-height: 1; }
+    .brand p { margin: 6px 0 0; color: var(--muted); font-size: 14px; letter-spacing: 0.04em; text-transform: uppercase; }
+    .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 6px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--line); border-radius: 18px; margin-bottom: 18px; }
+    .tab { min-height: var(--tap); border: 0; border-radius: 14px; background: transparent; color: var(--muted); font-weight: 600; }
+    .tab.active { background: linear-gradient(180deg, #2a241c, #1a1713); color: var(--gold-2); box-shadow: inset 0 0 0 1px rgba(212, 184, 138, 0.45); }
     .panel { display: none; }
-    .panel.is-on {
-      display: block;
-      animation: enter 0.38s cubic-bezier(0.2, 0.8, 0.2, 1);
-    }
-    @keyframes enter {
-      from { opacity: 0; transform: translateY(14px); }
-      to { opacity: 1; transform: none; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .panel.is-on { animation: none; }
-    }
-
-    .card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.025), transparent 40%), var(--elev);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 18px;
-      box-shadow: var(--shadow);
-    }
-    .card + .card { margin-top: 14px; }
-
-    .label {
-      display: block;
-      margin: 0 0 10px;
-      color: var(--muted);
-      font-size: 13px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .choices {
-      display: grid;
-      gap: 10px;
-    }
-    .choice {
-      min-height: var(--tap);
-      text-align: left;
-      padding: 14px 16px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.06);
-      background: var(--elev-2);
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      transition: border-color 0.2s ease, background 0.2s ease;
-    }
-    .choice strong { font-size: 18px; font-weight: 650; }
-    .choice span { color: var(--muted); font-size: 14px; }
-    .choice[aria-pressed="true"] {
-      border-color: var(--gold);
-      background: rgba(212, 184, 138, 0.1);
-    }
-    .choice[aria-pressed="true"] strong { color: var(--gold-2); }
-
-    .field { margin-top: 16px; }
-    .field input[type="text"] {
-      width: 100%;
-      min-height: var(--tap);
-      padding: 14px 16px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: #0e1116;
-      font-size: 20px;
-    }
-    .field input::placeholder { color: #6f685e; }
-
-    .check {
-      margin-top: 14px;
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
-      min-height: var(--tap);
-      padding: 14px 16px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.06);
-      background: var(--elev-2);
-    }
-    .check input {
-      width: 28px;
-      height: 28px;
-      margin-top: 2px;
-      accent-color: #c4a574;
-      flex: 0 0 28px;
-    }
-    .check b { display: block; font-size: 17px; }
-    .check small { color: var(--muted); }
-
-    .property-box { display: none; }
-    .property-box.is-on { display: block; animation: enter 0.3s ease; }
-
-    .plaque {
-      margin-top: 16px;
-      padding: 20px 18px;
-      border-radius: 18px;
-      border: 1px solid var(--gold);
-      background:
-        radial-gradient(400px 120px at 100% 0%, rgba(212,184,138,0.16), transparent 50%),
-        #12100c;
-      text-align: center;
-    }
-    .plaque .kicker {
-      color: var(--gold);
-      letter-spacing: 0.16em;
-      font-size: 13px;
-      text-transform: uppercase;
-    }
-    .plaque .instance {
-      margin: 8px 0 0;
-      font-family: "Cormorant Garamond", Georgia, serif;
-      font-size: 40px;
-      line-height: 1;
-      letter-spacing: 0.04em;
-    }
-    .plaque .recommend {
-      margin-top: 14px;
-      padding-top: 14px;
-      border-top: 1px solid rgba(212,184,138,0.25);
-      font-size: 18px;
-    }
-    .plaque .recommend b {
-      display: block;
-      margin-top: 4px;
-      color: var(--gold-2);
-      font-size: 22px;
-    }
-    .hint {
-      margin: 10px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-      text-align: center;
-    }
-
-    .fee {
-      margin-top: 14px;
-      padding: 8px 4px 4px;
-    }
-    .fee .sum {
-      margin: 4px 0 0;
-      font-variant-numeric: tabular-nums;
-      font-size: 44px;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      color: var(--gold-2);
-    }
-    .fee .sum.is-fresh { animation: pop 0.35s ease; }
-    @keyframes pop {
-      from { transform: scale(0.98); opacity: 0.4; }
-      to { transform: none; opacity: 1; }
-    }
-    .formula {
-      margin: 8px 0 0;
-      color: var(--muted);
-      font-size: 15px;
-    }
-    .legal-note {
-      margin: 16px 4px 0;
-      color: #7d766c;
-      font-size: 13px;
-    }
-
-    .suggest-wrap { position: relative; }
-    .suggest {
-      position: absolute;
-      z-index: 5;
-      left: 0;
-      right: 0;
-      top: calc(100% + 6px);
-      margin: 0;
-      padding: 6px;
-      list-style: none;
-      background: #1a1f28;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      box-shadow: var(--shadow);
-      max-height: 320px;
-      overflow: auto;
-    }
-    .suggest[hidden] { display: none; }
-    .suggest button {
-      width: 100%;
-      text-align: left;
-      min-height: 52px;
-      padding: 12px 12px;
-      border: 0;
-      border-radius: 12px;
-      background: transparent;
-    }
-    .suggest button[aria-selected="true"],
-    .suggest button:hover { background: rgba(212,184,138,0.12); }
-    .suggest small { display: block; color: var(--muted); margin-top: 2px; }
-
-    .message {
-      margin-top: 14px;
-      padding: 14px 16px;
-      border-radius: 16px;
-      background: var(--warn-bg);
-      color: var(--warn);
-      border: 1px solid rgba(240, 221, 176, 0.25);
-    }
-    .message.is-error {
-      background: var(--danger-bg);
-      color: var(--danger);
-      border-color: rgba(240, 194, 194, 0.25);
-    }
-    .message[hidden] { display: none; }
-
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 12px;
-    }
-    .chips[hidden] { display: none; }
-    .chip {
-      min-height: 48px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: var(--elev-2);
-    }
-
-    .court-card { margin-top: 14px; }
-    .court-card[hidden] { display: none; }
-    .court-card .district {
-      margin: 0;
-      color: var(--gold);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      font-size: 13px;
-    }
-    .court-card h2 {
-      margin: 8px 0 0;
-      font-family: "Cormorant Garamond", Georgia, serif;
-      font-size: 34px;
-      font-weight: 600;
-      line-height: 1.05;
-    }
-    .court-card .addr {
-      margin: 10px 0 0;
-      font-size: 18px;
-    }
-    .court-card .picked {
-      margin: 8px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
-    .site-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 58px;
-      margin-top: 16px;
-      border-radius: 16px;
-      text-decoration: none;
-      font-weight: 700;
-      color: #1a140c;
-      background: linear-gradient(180deg, #f0ddb8, #d4b88a);
-    }
-    .status {
-      min-height: 1.2em;
-      margin: 8px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
+    .panel.active { display: block; }
+    .card { background: linear-gradient(180deg, rgba(255,255,255,0.025), transparent 40%), var(--elev); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); margin-bottom: 14px; }
+    .label { display: block; margin: 0 0 10px; color: var(--muted); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .select-custom, input[type="number"], input[type="text"] { width: 100%; min-height: var(--tap); padding: 14px 16px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); background: #0e1116; font-size: 18px; color: #fff; margin-bottom: 16px; }
+    .fee-box { text-align: center; padding: 20px; background: #12100c; border: 1px solid var(--gold); border-radius: 18px; margin-top: 15px; }
+    .fee-box h2 { font-size: 40px; color: var(--gold-2); margin: 10px 0 0; }
+    .btn { width: 100%; min-height: var(--tap); background: linear-gradient(180deg, #d4b88a, #b89d6c); border: 0; border-radius: 16px; color: #0b0d11; font-weight: 750; font-size: 18px; text-transform: uppercase; margin-top: 10px; }
+    .result-item { padding: 12px; background: rgba(255,255,255,0.02); border-radius: 12px; margin-top: 8px; border-left: 3px solid var(--gold); }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <header class="brand">
-      <div class="seal" aria-hidden="true">§</div>
+    <div class="brand">
+      <div class="seal">§</div>
       <div>
-        <h1>Адвокатская контора</h1>
-        <p>Госпошлина и подсудность · Челябинск</p>
+        <h1>Помощник Юриста</h1>
+        <p>Челябинск • Госпошлина и Подсудность</p>
       </div>
-    </header>
-
-    <div class="tabs" role="tablist" aria-label="Разделы">
-      <button class="tab" id="tab-fee" role="tab" aria-selected="true" aria-controls="panel-fee" type="button">Госпошлина</button>
-      <button class="tab" id="tab-court" role="tab" aria-selected="false" aria-controls="panel-court" type="button">Подсудность</button>
+    </div>
+    
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('fee')">Госпошлина</button>
+      <button class="tab" onclick="switchTab('court')">Подсудность</button>
     </div>
 
-    <section class="panel is-on" id="panel-fee" role="tabpanel" aria-labelledby="tab-fee">
+    <!-- Панель Госпошлины -->
+    <div id="panel-fee" class="panel active">
       <div class="card">
-        <p class="label">Характер иска</p>
-        <div class="choices" role="radiogroup" aria-label="Характер иска">
-          <button class="choice" type="button" data-claim="property" aria-pressed="true">
-            <strong>Имущественный</strong>
-            <span>По цене иска, ст. 333.19 НК РФ</span>
-          </button>
-          <button class="choice" type="button" data-claim="nonproperty" aria-pressed="false">
-            <strong>Неимущественный</strong>
-            <span>Для физических лиц · 3 000 ₽</span>
-          </button>
-          <button class="choice" type="button" data-claim="divorce" aria-pressed="false">
-            <strong>Расторжение брака</strong>
-            <span>Фиксированная пошлина · 5 000 ₽</span>
-          </button>
-          <button class="choice" type="button" data-claim="admin" aria-pressed="false">
-            <strong>Административный</strong>
-            <span>Оспаривание решений органов для физлиц · 3 000 ₽</span>
-          </button>
+        <label class="label">Тип иска</label>
+        <select id="claim-type" class="select-custom" onchange="togglePriceInput()">
+          <option value="имущественный">Имущественного характера (подлежащий оценке)</option>
+          <option value="неимущественный">Неимущественного характера / Имущественный без оценки</option>
+          <option value="развод">Расторжение брака</option>
+          <option value="алименты">Взыскание алиментов</option>
+        </select>
+
+        <div id="price-block">
+          <label class="label">Цена иска (рубли)</label>
+          <input type="number" id="claim-price" placeholder="Введите сумму" value="100000" oninput="calcFee()">
         </div>
 
-        <div class="property-box is-on" id="property-box">
-          <label class="field">
-            <span class="label">Цена иска (в рублях)</span>
-            <input id="price" type="text" inputmode="decimal" autocomplete="off" placeholder="Например, 150 000" aria-describedby="fee-sum">
-          </label>
-          <label class="check">
-            <input id="consumer" type="checkbox">
-            <span>
-              <b>Спор о защите прав потребителей</b>
-              <small>Мировой суд — до 100 000 ₽ включительно. Без этой отметки предел — 50 000 ₽.</small>
-            </span>
-          </label>
+        <div class="fee-box">
+          <span class="label" style="color:var(--gold)">Размер госпошлины</span>
+          <h2 id="fee-result">4 000 ₽</h2>
         </div>
-
-        <div id="instance-box"></div>
-        <div class="fee">
-          <p class="label">Госпошлина</p>
-          <p class="sum" id="fee-sum" aria-live="polite">—</p>
-          <p class="formula" id="fee-formula"></p>
-        </div>
-        <p class="legal-note">Расчёт для судов общей юрисдикции и мировых судей по ст. 333.19 НК РФ. Сумма округляется до копеек. Перед подачей сверьте ставку с действующей редакцией кодекса.</p>
       </div>
-    </section>
+    </div>
 
-    <section class="panel" id="panel-court" role="tabpanel" aria-labelledby="tab-court" hidden>
+    <!-- Панель Подсудности -->
+    <div id="panel-court" class="panel">
       <div class="card">
-        <label class="field suggest-wrap">
-          <span class="label">Адрес в Челябинске</span>
-          <input id="address" type="text" autocomplete="off" placeholder="Улица и дом" aria-autocomplete="list" aria-controls="suggest" aria-expanded="false">
-          <ul class="suggest" id="suggest" role="listbox" hidden></ul>
-        </label>
-        <p class="status" id="search-status" aria-live="polite"></p>
-        <div class="message" id="court-message" hidden></div>
-        <div class="chips" id="district-chips" hidden></div>
+        <label class="label">Выберите район Челябинска</label>
+        <select id="district-select" class="select-custom" onchange="findCourt()">
+          <option value="">-- Выберите район --</option>
+          <option value="Калининский">Калининский район</option>
+          <option value="Курчатовский">Курчатовский район</option>
+          <option value="Ленинский">Ленинский район</option>
+          <option value="Металлургический">Металлургический район</option>
+          <option value="Советский">Советский район</option>
+          <option value="Тракторозаводский">Тракторозаводский район</option>
+          <option value="Центральный">Центральный район</option>
+        </select>
 
-        <article class="court-card card" id="court-card" hidden>
-          <p class="district" id="court-district"></p>
-          <h2 id="court-name"></h2>
-          <p class="addr" id="court-address"></p>
-          <p class="picked" id="court-picked"></p>
-          <a class="site-btn" id="court-site" href="https://sudrf.ru" target="_blank" rel="noopener noreferrer">Перейти на сайт суда</a>
-        </article>
+        <div id="court-result" style="display:none; margin-top:15px;">
+          <div class="result-item">
+            <strong>Районный суд:</strong> <span id="r-court-name"></span><br>
+            <small style="color:var(--muted)">Адрес: </small><span id="r-court-addr" style="font-size:15px;"></span>
+          </div>
+          <div class="result-item" style="margin-top:15px;">
+            <strong>Мировые судьи:</strong> Нажмите кнопку ниже для выбора точного участка в районе<br>
+            <button class="btn" style="min-height:44px; font-size:14px;" id="mirsud-btn" onclick="window.open('https://mirsud74.ru', '_blank')">Открыть участки на MirSud74.ru</button>
+          </div>
+        </div>
       </div>
-    </section>
+    </div>
   </div>
 
   <script>
-    const DADATA_API_KEY = "04a82528af1ce9fdd73cd6cbd3e0bb3d79264e37";
-    const DADATA_URL = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address";
-
-    const COURTS = {
-      калининский: {
-        district: "Калининский район",
-        name: "Калининский районный суд",
-        address: "ул. Каслинская, 42",
-        site: "https://sudrf.ru"
-      },
-      курчатовский: {
-        district: "Курчатовский район",
-        name: "Курчатовский районный суд",
-        address: "ул. Куйбышева, 30",
-        site: "https://sudrf.ru"
-      },
-      ленинский: {
-        district: "Ленинский район",
-        name: "Ленинский районный суд",
-        address: "ул. Новороссийская, 50",
-        site: "https://sudrf.ru"
-      },
-      металлургический: {
-        district: "Металлургический район",
-        name: "Металлургический районный суд",
-        address: "ул. Богдана Хмельницкого, 29",
-        site: "https://sudrf.ru"
-      },
-      советский: {
-        district: "Советский район",
-        name: "Советский районный суд",
-        address: "ул. Елькина, 76",
-        site: "https://sudrf.ru"
-      },
-      тракторозаводский: {
-        district: "Тракторозаводский район",
-        name: "Тракторозаводский районный суд",
-        address: "ул. Танкистов, 179",
-        site: "https://sudrf.ru"
-      },
-      центральный: {
-        district: "Центральный район",
-        name: "Центральный районный суд",
-        address: "ул. Коммуны, 87",
-        site: "https://sudrf.ru"
-      }
-    };
-
-    const DISTRICT_KEYS = [
-      "тракторозаводский",
-      "металлургический",
-      "курчатовский",
-      "калининский",
-      "центральный",
-      "ленинский",
-      "советский"
-    ];
-
-    const state = {
-      claim: "property",
-      court: null,
-      addressLabel: ""
-    };
-
-    const priceInput = document.getElementById("price");
-    const consumerInput = document.getElementById("consumer");
-    const propertyBox = document.getElementById("property-box");
-    const instanceBox = document.getElementById("instance-box");
-    const feeSum = document.getElementById("fee-sum");
-    const feeFormula = document.getElementById("fee-formula");
-    const addressInput = document.getElementById("address");
-    const suggestList = document.getElementById("suggest");
-    const searchStatus = document.getElementById("search-status");
-    const courtMessage = document.getElementById("court-message");
-    const districtChips = document.getElementById("district-chips");
-    const courtCard = document.getElementById("court-card");
-    const panels = {
-      fee: document.getElementById("panel-fee"),
-      court: document.getElementById("panel-court")
-    };
-    const tabs = {
-      fee: document.getElementById("tab-fee"),
-      court: document.getElementById("tab-court")
-    };
-
-    let suggestions = [];
-    let activeIndex = -1;
-    let debounceTimer = 0;
-    let abortController = null;
-
-    function roundKopecks(value) {
-      return Math.round((value + Number.EPSILON) * 100) / 100;
-    }
-
-    function formatMoney(value) {
-      return new Intl.NumberFormat("ru-RU", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      }).format(value) + " ₽";
-    }
-
-    function parsePrice(raw) {
-      const cleaned = String(raw).replace(/\s/g, "").replace(",", ".");
-      if (!cleaned || cleaned === ".") return null;
-      const value = Number(cleaned);
-      if (!Number.isFinite(value) || value <= 0) return null;
-      return value;
-    }
-
-    function calcPropertyFee(price) {
-      let fee;
-      let formula;
-      if (price <= 100000) {
-        fee = Math.max(price * 0.04, 4000);
-        formula = "4% от цены иска, но не менее 4 000 ₽";
-      } else if (price <= 300000) {
-        fee = 4000 + (price - 100000) * 0.03;
-        formula = "4 000 ₽ + 3% от суммы свыше 100 000 ₽";
-      } else if (price <= 500000) {
-        fee = 10000 + (price - 300000) * 0.02;
-        formula = "10 000 ₽ + 2% от суммы свыше 300 000 ₽";
-      } else if (price <= 1000000) {
-        fee = 14000 + (price - 500000) * 0.01;
-        formula = "14 000 ₽ + 1% от суммы свыше 500 000 ₽";
-      } else if (price <= 3000000) {
-        fee = 19000 + (price - 1000000) * 0.005;
-        formula = "19 000 ₽ + 0,5% от суммы свыше 1 000 000 ₽";
-      } else if (price <= 8000000) {
-        fee = 29000 + (price - 3000000) * 0.003;
-        formula = "29 000 ₽ + 0,3% от суммы свыше 3 000 000 ₽";
+    function switchTab(tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      if(tab === 'fee') {
+        document.querySelectorAll('.tab')[0].classList.add('active');
+        document.getElementById('panel-fee').classList.add('active');
       } else {
-        fee = Math.min(44000 + (price - 8000000) * 0.001, 900000);
-        formula = "44 000 ₽ + 0,1% от суммы свыше 8 000 000 ₽, не более 900 000 ₽";
-      }
-      return { fee: roundKopecks(fee), formula };
-    }
-
-    function renderFee() {
-      const previous = feeSum.textContent;
-      if (state.claim === "divorce") {
-        instanceBox.innerHTML = "";
-        feeSum.textContent = formatMoney(5000);
-        feeFormula.textContent = "Расторжение брака — фиксированная пошлина.";
-      } else if (state.claim === "nonproperty") {
-        instanceBox.innerHTML = "";
-        feeSum.textContent = formatMoney(3000);
-        feeFormula.textContent = "Неимущественный иск для физического лица.";
-      } else if (state.claim === "admin") {
-        instanceBox.innerHTML = "";
-        feeSum.textContent = formatMoney(3000);
-        feeFormula.textContent = "Административный иск об оспаривании решений органов власти для физического лица.";
-      } else {
-        const price = parsePrice(priceInput.value);
-        if (price == null) {
-          instanceBox.innerHTML = "";
-          feeSum.textContent = "—";
-          feeFormula.textContent = "Введите цену иска больше нуля — расчёт выполнится сразу.";
-        } else {
-          const consumer = consumerInput.checked;
-          const limit = consumer ? 100000 : 50000;
-          const isWorld = price <= limit;
-          const result = calcPropertyFee(price);
-          const title = isWorld ? "МИРОВОЙ СУД" : "РАЙОННЫЙ СУД";
-          let recommend = "";
-          if (!isWorld && state.court) {
-            recommend =
-              '<div class="recommend">Рекомендуемый суд:<b>' +
-              escapeHtml(state.court.name) +
-              "</b><span>" +
-              escapeHtml(state.court.address) +
-              "</span></div>";
-          } else if (!isWorld) {
-            recommend = '<p class="hint">Выберите адрес во вкладке «Подсудность», и здесь появится районный суд.</p>';
-          } else if (state.court) {
-            recommend =
-              '<p class="hint">Район адреса: ' +
-              escapeHtml(state.court.district) +
-              ". По цене иска дело относится к мировому судье.</p>";
-          }
-          instanceBox.innerHTML =
-            '<div class="plaque" data-instance="' + (isWorld ? "world" : "district") + '">' +
-            '<div class="kicker">Инстанция</div>' +
-            '<p class="instance">' + title + "</p>" +
-            recommend +
-            "</div>";
-          feeSum.textContent = formatMoney(result.fee);
-          feeFormula.textContent = result.formula + (consumer ? " · учтён спор о защите прав потребителей." : "");
-        }
-      }
-      if (feeSum.textContent !== previous) {
-        feeSum.classList.remove("is-fresh");
-        void feeSum.offsetWidth;
-        feeSum.classList.add("is-fresh");
+        document.querySelectorAll('.tab')[1].classList.add('active');
+        document.getElementById('panel-court').classList.add('active');
       }
     }
 
-    function escapeHtml(value) {
-      return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;");
+    function togglePriceInput() {
+      const type = document.getElementById('claim-type').value;
+      document.getElementById('price-block').style.display = (type === 'имущественный') ? 'block' : 'none';
+      calcFee();
     }
 
-    function normalizeDistrict(raw) {
-      return String(raw)
-        .toLowerCase()
-        .replace(/ё/g, "е")
-        .replace(/район|р-н|р-он/g, " ")
-        .replace(/[^a-zа-я\s-]/gi, " ")
-        .replace(/\s+/g, " ")
-        .trim();
-    }
+    function calcFee() {
+      const type = document.getElementById('claim-type').value;
+      let fee = 0;
 
-    function keyFromText(raw) {
-      const text = normalizeDistrict(raw);
-      if (!text) return null;
-      for (const key of DISTRICT_KEYS) {
-        if (text === key || text.includes(key)) return key;
+      if (type === 'имущественный') {
+        const price = parseFloat(document.getElementById('claim-price').value) || 0;
+        if (price <= 100000) fee = Math.max(4000, price * 0.04);
+        else if (price <= 300000) fee = 4000 + (price - 100000) * 0.03;
+        else if (price <= 500000) fee = 10000 + (price - 300000) * 0.02;
+        else if (price <= 1000000) fee = 14000 + (price - 500000) * 0.01;
+        else fee = Math.min(900000, 19000 + (price - 1000000) * 0.005);
+      } else if (type === 'неимущественный') {
+        fee = 3000;
+      } else if (type === 'развод') {
+        fee = 5000;
+      } else if (type === 'алименты') {
+        fee = 150;
       }
-      return null;
+
+      document.getElementById('fee-result').innerText = Math.round(fee).toLocaleString('ru-RU') + ' ₽';
     }
 
-    function resolveCourt(data, fullValue) {
-      const fields = [
-        data && data.district,
-        data && data.city_district,
-        data && data.city_district_with_type,
-        data && data.city_area,
-        data && data.area,
-        data && data.area_with_type
-      ];
-      for (const field of fields) {
-        if (field && String(field).trim()) {
-          const key = keyFromText(field);
-          if (key) return COURTS[key];
-        }
-      }
-      const key = keyFromText(fullValue || "");
-      return key ? COURTS[key] : null;
+    const courts = {
+      "Калининский": { name: "Калининский районный суд г. Челябинска", addr: "ул. Каслинская, д. 42" },
+      "Курчатовский": { name: "Курчатовский районный суд г. Челябинска", addr: "ул. Куйбышева, д. 30" },
+      "Ленинский": { name: "Ленинский районный суд г. Челябинска", addr: "ул. Новороссийская, д. 50" },
+      "Металлургический": { name: "Металлургический районный суд г. Челябинска", addr: "ул. Богдана Хмельницкого, д. 33" },
+      "Советский": { name: "Советский районный суд г. Челябинска", addr: "ул. Монакова, д. 2-а" },
+      "Тракторозаводский": { name: "Тракторозаводский районный суд г. Челябинска", addr: "ул. Танкистов, д. 179" },
+      "Центральный": { name: "Центральный районный суд г. Челябинска", addr: "ул. Коммуны, д. 87" }
+    };
+
+    function findCourt() {
+      const dist = document.getElementById('district-select').value;
+      const resBlock = document.getElementById('court-result');
+      if(!dist) { resBlock.style.display = 'none'; return; }
+      
+      resBlock.style.display = 'block';
+      document.getElementById('r-court-name').innerText = courts[dist].name;
+      document.getElementById('r-court-addr').innerText = courts[dist].addr;
     }
-
-    function setCourt(court, addressLabel) {
-      state.court = court;
-      state.addressLabel = addressLabel || state.addressLabel;
-      courtCard.hidden = false;
-      document.getElementById("court-district").textContent = court.district;
-      document.getElementById("court-name").textContent = court.name;
-      document.getElementById("court-address").textContent = court.address + ", Челябинск";
-      document.getElementById("court-picked").textContent = state.addressLabel ? state.addressLabel : "";
-      const link = document.getElementById("court-site");
-      link.href = court.site;
-      hideMessage();
-      districtChips.hidden = true;
-      renderFee();
-    }
-
-    function clearCourtCard() {
-      state.court = null;
-      courtCard.hidden = true;
-      renderFee();
-    }
-
-    function showMessage(text, kind) {
-      courtMessage.hidden = false;
-      courtMessage.textContent = text;
-      courtMessage.classList.toggle("is-error", kind === "error");
-    }
-
-    function hideMessage() {
-      courtMessage.hidden = true;
-      courtMessage.textContent = "";
-      courtMessage.classList.remove("is-error");
-    }
-
-    function showManualDistricts() {
-      districtChips.hidden = false;
-      districtChips.innerHTML = DISTRICT_KEYS.map(function (key) {
-        return '<button type="button" class="chip" data-key="' + key + '">' + escapeHtml(COURTS[key].district) + "</button>";
-      }).join("");
-    }
-
-    function showTab(name) {
-      Object.keys(panels).forEach(function (key) {
-        const on = key === name;
-        panels[key].classList.toggle("is-on", on);
-        panels[key].hidden = !on;
-        tabs[key].setAttribute("aria-selected", on ? "true" : "false");
-      });
-    }
-
-    function closeSuggestions() {
-      suggestList.hidden = true;
-      suggestList.innerHTML = "";
-      addressInput.setAttribute("aria-expanded", "false");
-      activeIndex = -1;
-      suggestions = [];
-    }
-
-    function renderSuggestions() {
-      if (!suggestions.length) {
-        closeSuggestions();
-        return;
-      }
-      suggestList.hidden = false;
-      addressInput.setAttribute("aria-expanded", "true");
-      suggestList.innerHTML = suggestions.map(function (item, index) {
-        const district = (item.data && (item.data.city_district || item.data.district)) || "";
-        return (
-          '<li><button type="button" role="option" data-index="' + index + '" aria-selected="' + (index === activeIndex) + '">' +
-          escapeHtml(item.value) +
-          (district ? "<small>" + escapeHtml(district) + "</small>" : "") +
-          "</button></li>"
-        );
-      }).join("");
-    }
-
-    function selectSuggestion(item) {
-      const data = item.data || {};
-      addressInput.value = item.value;
-      closeSuggestions();
-      searchStatus.textContent = "";
-      if (!data.house) {
-        clearCourtCard();
-        showMessage("Адрес указан не до конца. Выберите подсказку, в которой есть улица и номер дома.", "warn");
-        districtChips.hidden = true;
-        return;
-      }
-      const court = resolveCourt(data, item.value);
-      if (!court) {
-        clearCourtCard();
-        showMessage("Адрес найден, но административный район не определился. Укажите район вручную — карточка суда откроется сразу.", "warn");
-        state.addressLabel = item.value;
-        showManualDistricts();
-        return;
-      }
-      setCourt(court, item.value);
-    }
-
-    async function requestSuggestions(query) {
-      if (abortController) abortController.abort();
-      abortController = new AbortController();
-      searchStatus.textContent = "Ищем адрес в Челябинске…";
-      hideMessage();
-      try {
-        const response = await fetch(DADATA_URL, {
-          method: "POST",
-          signal: abortController.signal,
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "Authorization": "Token " + DADATA_API_KEY
-          },
-          body: JSON.stringify({
-            query: query,
-            count: 8,
-            locations: [{ city: "Челябинск" }]
-          })
-        });
-        if (!response.ok) {
-          const denied = response.status === 401 || response.status === 403;
-          throw new Error(denied ? "key" : "http");
-        }
-        const payload = await response.json();
-        const list = Array.isArray(payload.suggestions) ? payload.suggestions : [];
-        suggestions = list.filter(function (item) {
-          const city = (item.data && item.data.city) || "";
-          return !city || city.indexOf("Челябинск") !== -1;
-        });
-        activeIndex = -1;
-        searchStatus.textContent = suggestions.length ? "" : "В Челябинске такой адрес не найден. Уточните улицу и дом.";
-        if (!suggestions.length) {
-          showMessage("Подсказок нет. Проверьте написание улицы или добавьте номер дома.", "warn");
-        }
-        renderSuggestions();
-      } catch (error) {
-        if (error && error.name === "AbortError") return;
-        suggestions = [];
-        closeSuggestions();
-        searchStatus.textContent = "";
-        const keyProblem = error && error.message === "key";
-        showMessage(
-          keyProblem
-            ? "DaData отклонила ключ доступа. Подсказки сейчас недоступны — район можно выбрать вручную."
-            : "Сервис подсказок DaData недоступен. Проверьте соединение с интернетом или укажите район вручную.",
-          "error"
-        );
-        showManualDistricts();
-      }
-    }
-
-    function scheduleSuggest() {
-      const query = addressInput.value.trim();
-      window.clearTimeout(debounceTimer);
-      if (query.length < 2) {
-        closeSuggestions();
-        searchStatus.textContent = query ? "Введите ещё несколько букв улицы." : "";
-        return;
-      }
-      debounceTimer = window.setTimeout(function () {
-        requestSuggestions(query);
-      }, 280);
-    }
-
-    document.querySelectorAll(".tab").forEach(function (tab) {
-      tab.addEventListener("click", function () {
-        showTab(tab.id === "tab-fee" ? "fee" : "court");
-      });
-    });
-
-    document.querySelectorAll(".choice").forEach(function (button) {
-      button.addEventListener("click", function () {
-        state.claim = button.dataset.claim;
-        document.querySelectorAll(".choice").forEach(function (item) {
-          item.setAttribute("aria-pressed", item === button ? "true" : "false");
-        });
-        propertyBox.classList.toggle("is-on", state.claim === "property");
-        renderFee();
-      });
-    });
-
-    priceInput.addEventListener("input", renderFee);
-    consumerInput.addEventListener("change", renderFee);
-
-    addressInput.addEventListener("input", function () {
-      clearCourtCard();
-      districtChips.hidden = true;
-      scheduleSuggest();
-    });
-
-    addressInput.addEventListener("keydown", function (event) {
-      if (suggestList.hidden) return;
-      if (event.key === "ArrowDown") {
-        event.preventDefault();
-        activeIndex = Math.min(activeIndex + 1, suggestions.length - 1);
-        renderSuggestions();
-      } else if (event.key === "ArrowUp") {
-        event.preventDefault();
-        activeIndex = Math.max(activeIndex - 1, 0);
-        renderSuggestions();
-      } else if (event.key === "Enter" && activeIndex >= 0) {
-        event.preventDefault();
-        selectSuggestion(suggestions[activeIndex]);
-      } else if (event.key === "Escape") {
-        closeSuggestions();
-      }
-    });
-
-    suggestList.addEventListener("mousedown", function (event) {
-      const button = event.target.closest("button[data-index]");
-      if (!button) return;
-      event.preventDefault();
-      selectSuggestion(suggestions[Number(button.dataset.index)]);
-    });
-
-    districtChips.addEventListener("click", function (event) {
-      const button = event.target.closest("button[data-key]");
-      if (!button) return;
-      const court = COURTS[button.dataset.key];
-      if (!court) return;
-      setCourt(court, addressInput.value.trim());
-    });
-
-    document.addEventListener("click", function (event) {
-      if (!event.target.closest(".suggest-wrap")) closeSuggestions();
-    });
-
-    renderFee();
   </script>
 </body>
 </html>
